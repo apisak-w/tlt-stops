@@ -181,7 +181,6 @@
                       class:imminent={countdown === "Now"}
                     >
                       <span class="cd">{countdown}</span>
-                      <span class="sep">|</span>
                       <span class="at">{arrival.time}</span>
                     </div>
                     <div class="timeline-dot"></div>
@@ -203,8 +202,8 @@
   .stop-card {
     border: 1px solid var(--border-color);
     border-radius: var(--radius-lg);
-    padding: 1.5rem;
-    margin-bottom: 1.5rem;
+    padding: 2rem;
+    margin-bottom: 2rem;
     background: var(--card-bg);
     box-shadow: var(--shadow-sm);
     transition: box-shadow 0.2s ease;
@@ -301,16 +300,16 @@
   .timeline-container {
     display: flex;
     flex-direction: column;
-    gap: 3.5rem;
+    gap: 4rem;
     padding: 1rem 0;
   }
 
   .timeline-row {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 1.5rem;
     background: var(--bg-color);
-    padding: 1rem;
+    padding: 1.5rem;
     border-radius: var(--radius-lg);
     border: 1px solid var(--border-color);
   }

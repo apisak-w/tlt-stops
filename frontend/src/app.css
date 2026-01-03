@@ -12,6 +12,7 @@
   --radius-md: 12px;
   --radius-lg: 16px;
   --font-sans: "Inter", system-ui, -apple-system, sans-serif;
+  --text-color-rgb: 15, 23, 42;
 }
 
 :root[data-theme="dark"] {
@@ -25,6 +26,7 @@
   --accent-text-color: #ffffff;
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
   --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.5), 0 2px 4px -2px rgb(0 0 0 / 0.5);
+  --text-color-rgb: 248, 250, 252;
 }
 
 * {
@@ -98,8 +100,8 @@ button.secondary:hover {
   flex: 1;
   overflow-x: auto;
   scrollbar-width: none;
-  padding: 2.5rem 0; /* Space for the pills */
-  margin: -2.5rem 0;
+  padding: 3.5rem 3rem; /* Space for the pills, 3rem horizontal prevents sidebar collision */
+  margin: -3.5rem 0;
   display: flex;
   align-items: center;
 }
@@ -110,11 +112,27 @@ button.secondary:hover {
 
 .timeline-track {
   position: relative;
-  height: 3px;
-  background: var(--text-color);
-  opacity: 0.6;
+  height: 4px;
+  background: linear-gradient(
+    90deg,
+    rgba(var(--text-color-rgb, 15, 23, 42), 0.1) 0%,
+    var(--node-color, var(--accent-color)) 50%,
+    rgba(var(--text-color-rgb, 15, 23, 42), 0.1) 100%
+  );
+  background-size: 200% 100%;
+  border-radius: 4px;
   flex: 1;
   min-width: 100%;
+  animation: flow 3s linear infinite;
+}
+
+@keyframes flow {
+  0% {
+    background-position: 100% 0%;
+  }
+  100% {
+    background-position: -100% 0%;
+  }
 }
 
 @media (max-width: 600px) {
@@ -147,18 +165,22 @@ button.secondary:hover {
   background: var(--card-bg);
   padding: 4px 12px;
   border-radius: 100px;
-  border: 1.5px solid var(--border-color);
-  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   display: flex;
   align-items: center;
   justify-content: center;
   position: absolute;
   white-space: nowrap;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 
 .pill-top {
   bottom: 18px;
-  gap: 8px;
+  flex-direction: column;
+  gap: 0;
+  padding: 4px 10px;
 }
 
 .pill-bottom {
@@ -172,19 +194,19 @@ button.secondary:hover {
 .pill-top .cd {
   font-weight: 800;
   color: var(--node-color, var(--accent-color));
-  font-size: 0.85rem;
+  font-size: 0.8rem;
+  line-height: 1;
+  margin-bottom: 1px;
 }
 
-.pill-top .sep {
-  color: var(--border-color);
-  font-size: 0.7rem;
-  font-weight: 400;
-}
+
 
 .pill-top .at {
-  font-size: 0.75rem;
-  color: #000000;
-  font-weight: 800;
+  font-size: 0.7rem;
+  color: var(--text-color);
+  font-weight: 700;
+  opacity: 0.8;
+  line-height: 1;
 }
 
 [data-theme="dark"] .pill-top .at {
