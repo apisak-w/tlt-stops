@@ -152,10 +152,14 @@
                   <span class="countdown"
                     >{getCountdown(arrival.timestamp)}</span
                   >
-                  <span class="clock-time">{arrival.time}</span>
-                  {#if arrival.isLowEntry}
-                    <span class="accessibility-icon" title="Low entry">♿</span>
-                  {/if}
+                  <div class="time-info">
+                    <span class="clock-time">{arrival.time}</span>
+                    {#if arrival.isLowEntry}
+                      <span class="accessibility-icon" title="Low entry"
+                        >♿</span
+                      >
+                    {/if}
+                  </div>
                 </div>
               {/each}
             </div>
@@ -308,8 +312,13 @@
     background: var(--bg-color);
     border: 1px solid var(--border-color);
     border-radius: var(--radius-md);
-    min-width: 4rem;
-    position: relative;
+    min-width: 4.5rem;
+  }
+
+  .time-info {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
   }
 
   .arrival-token.imminent {
@@ -329,18 +338,8 @@
   }
 
   .accessibility-icon {
-    position: absolute;
-    top: -4px;
-    right: -4px;
-    font-size: 0.75rem;
-    background: var(--card-bg);
-    border: 1px solid var(--border-color);
-    border-radius: 50%;
-    width: 1rem;
-    height: 1rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    font-size: 0.625rem;
+    opacity: 0.8;
   }
 
   .empty-state {
