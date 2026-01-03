@@ -1,48 +1,54 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
-  import Nav from './Nav.svelte';
-  import FavoritesPage from './FavoritesPage.svelte';
-  import BrowsePage from './BrowsePage.svelte';
+  import { onMount } from "svelte";
+  import Nav from "./Nav.svelte";
+  import FavoritesPage from "./FavoritesPage.svelte";
+  import BrowsePage from "./BrowsePage.svelte";
 
   let currentRoute = $state(window.location.pathname);
-  let theme = $state('light');
+  let theme = $state("light");
 
   function navigate(path: string) {
-    history.pushState({}, '', path);
+    history.pushState({}, "", path);
     currentRoute = path;
   }
 
   function toggleTheme() {
-    theme = theme === 'light' ? 'dark' : 'light';
-    document.documentElement.setAttribute('data-theme', theme);
-    localStorage.setItem('theme', theme);
+    theme = theme === "light" ? "dark" : "light";
+    document.documentElement.setAttribute("data-theme", theme);
+    localStorage.setItem("theme", theme);
   }
 
-  window.addEventListener('popstate', () => {
+  window.addEventListener("popstate", () => {
     currentRoute = window.location.pathname;
   });
 
   onMount(() => {
-    const savedTheme = localStorage.getItem('theme');
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    
-    theme = savedTheme || (prefersDark ? 'dark' : 'light');
-    document.documentElement.setAttribute('data-theme', theme);
+    const savedTheme = localStorage.getItem("theme");
+    const prefersDark = window.matchMedia(
+      "(prefers-color-scheme: dark)"
+    ).matches;
+
+    theme = savedTheme || (prefersDark ? "dark" : "light");
+    document.documentElement.setAttribute("data-theme", theme);
   });
 </script>
 
 <div class="container">
   <header class="header">
     <h1>TLT Stops</h1>
-    <button class="secondary theme-toggle" onclick={toggleTheme} aria-label="Toggle theme">
-      {theme === 'light' ? '🌙' : '☀️'}
+    <button
+      class="secondary theme-toggle"
+      onclick={toggleTheme}
+      aria-label="Toggle theme"
+    >
+      {theme === "light" ? "🌙" : "☀️"}
     </button>
   </header>
 
   <main id="app">
-    {#if currentRoute === '/'}
+    {#if currentRoute === "/"}
       <FavoritesPage />
-    {:else if currentRoute.startsWith('/browse')}
+    {:else if currentRoute.startsWith("/browse")}
       <BrowsePage />
     {/if}
   </main>

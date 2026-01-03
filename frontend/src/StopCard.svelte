@@ -80,6 +80,24 @@
       }
       return 0;
     });
+
+  function getRouteColor(route: string): string {
+    // High-contrast, saturated colors for better legibility
+    const colors = [
+      "#2563eb", // Blue (Darker)
+      "#4f46e5", // Indigo (Darker)
+      "#7c3aed", // Violet (Darker)
+      "#db2777", // Pink (Darker)
+      "#dc2626", // Red (Darker)
+      "#ca8a04", // Amber (Darker/Gold)
+      "#059669", // Emerald (Darker)
+    ];
+    let hash = 0;
+    for (let i = 0; i < route.length; i++) {
+      hash = route.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    return colors[Math.abs(hash) % colors.length];
+  }
 </script>
 
 <div class="stop-card">
@@ -134,34 +152,45 @@
         <p>No arrivals available at this time.</p>
       </div>
     {:else}
-      <div class="routes-container">
+      <div class="timeline-container">
         {#each visibleRoutes as route}
           {@const routeArrivals = allArrivals.filter((a) => a.route === route)}
           {@const routeType = routeArrivals[0]?.type || ""}
-          <div class="route-card">
-            <div class="route-info">
+          {@const routeColor = getRouteColor(route)}
+          <div class="timeline-row" style="--node-color: {routeColor}">
+            <div class="route-sidebar">
               <span class="route-type-icon">{getIcon(routeType)}</span>
-              <span class="route-badge">{route}</span>
+              <span class="route-badge" style="background: {routeColor}">
+                {route}
+              </span>
             </div>
-            <div class="times-group">
-              {#each routeArrivals as arrival}
-                <div
-                  class="arrival-token"
-                  class:imminent={getCountdown(arrival.timestamp) === "Now"}
-                >
-                  <span class="countdown"
-                    >{getCountdown(arrival.timestamp)}</span
+            <div class="timeline-scroll-container">
+              <div class="timeline-track">
+                {#each routeArrivals as arrival}
+                  {@const countdown = getCountdown(arrival.timestamp)}
+                  {@const diffMinutes = Math.max(
+                    0,
+                    (arrival.timestamp - $currentTime) / 60000
+                  )}
+                  <div
+                    class="timeline-node"
+                    style="left: {Math.min(98, (diffMinutes / 60) * 100)}%"
                   >
-                  <div class="time-info">
-                    <span class="clock-time">{arrival.time}</span>
+                    <div
+                      class="timeline-pill pill-top"
+                      class:imminent={countdown === "Now"}
+                    >
+                      <span class="cd">{countdown}</span>
+                      <span class="sep">|</span>
+                      <span class="at">{arrival.time}</span>
+                    </div>
+                    <div class="timeline-dot"></div>
                     {#if arrival.isLowEntry}
-                      <span class="accessibility-icon" title="Low entry"
-                        >♿</span
-                      >
+                      <div class="timeline-pill pill-bottom">♿</div>
                     {/if}
                   </div>
-                </div>
-              {/each}
+                {/each}
+              </div>
             </div>
           </div>
         {/each}
@@ -255,12 +284,13 @@
   .route-badge {
     background: var(--accent-color);
     color: var(--accent-text-color);
-    padding: 0.25rem 0.5rem;
-    border-radius: 6px;
+    padding: 0.35rem 0.6rem;
+    border-radius: 8px;
     font-size: 0.875rem;
-    font-weight: 700;
+    font-weight: 800;
     min-width: 2.5rem;
     text-align: center;
+    box-shadow: var(--shadow-sm);
   }
 
   .route-badge.small {
@@ -268,78 +298,54 @@
     min-width: 2rem;
   }
 
-  .routes-container {
+  .timeline-container {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 3.5rem;
+    padding: 1rem 0;
   }
 
-  .route-card {
+  .timeline-row {
     display: flex;
     align-items: center;
     gap: 1rem;
-    padding: 0.5rem 0;
+    background: var(--bg-color);
+    padding: 1rem;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-color);
   }
 
-  .route-info {
+  @media (max-width: 480px) {
+    .timeline-row {
+      padding: 0.75rem 0.5rem;
+      gap: 0.5rem;
+    }
+  }
+
+  .route-sidebar {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 0.5rem;
-    min-width: 5rem;
+    min-width: 3.5rem;
+    gap: 0.1rem;
   }
 
   .route-type-icon {
     font-size: 1.25rem;
   }
 
-  .times-group {
-    display: flex;
-    gap: 0.75rem;
-    overflow-x: auto;
-    padding: 0.25rem 0;
-    scrollbar-width: none;
-  }
-
-  .times-group::-webkit-scrollbar {
-    display: none;
-  }
-
-  .arrival-token {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 0.5rem 0.75rem;
-    background: var(--bg-color);
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-md);
-    min-width: 4.5rem;
-  }
-
-  .time-info {
-    display: flex;
-    align-items: center;
-    gap: 0.25rem;
-  }
-
-  .arrival-token.imminent {
-    border-color: var(--accent-color);
-    background: rgba(59, 130, 246, 0.1);
-  }
-
-  .countdown {
-    font-size: 0.875rem;
-    font-weight: 700;
-    color: var(--accent-color);
-  }
-
-  .clock-time {
-    font-size: 0.625rem;
+  .dest-label {
+    font-size: 0.6rem;
     color: var(--secondary-text);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
   }
 
-  .accessibility-icon {
-    font-size: 0.625rem;
-    opacity: 0.8;
+  .pill-top.imminent {
+    border-color: var(--node-color, var(--accent-color));
+    box-shadow: 0 0 12px var(--node-color, var(--accent-color));
+    background: var(--card-bg);
   }
 
   .empty-state {

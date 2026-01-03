@@ -92,3 +92,111 @@ button.secondary:hover {
   background-color: var(--bg-color);
   border-color: var(--accent-color);
 }
+
+/* Timeline Utilities */
+.timeline-scroll-container {
+  flex: 1;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding: 2.5rem 0; /* Space for the pills */
+  margin: -2.5rem 0;
+  display: flex;
+  align-items: center;
+}
+
+.timeline-scroll-container::-webkit-scrollbar {
+  display: none;
+}
+
+.timeline-track {
+  position: relative;
+  height: 3px;
+  background: var(--text-color);
+  opacity: 0.6;
+  flex: 1;
+  min-width: 100%;
+}
+
+@media (max-width: 600px) {
+  .timeline-track {
+    min-width: 600px; /* Force minimum spacing on mobile */
+    margin: 0 1rem;
+  }
+}
+
+.timeline-node {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  top: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.timeline-dot {
+  width: 10px;
+  height: 10px;
+  background: var(--card-bg);
+  border: 3.5px solid var(--node-color, var(--accent-color));
+  border-radius: 50%;
+  z-index: 2;
+  box-shadow: 0 0 0 5px var(--card-bg);
+}
+
+.timeline-pill {
+  background: var(--card-bg);
+  padding: 4px 12px;
+  border-radius: 100px;
+  border: 1.5px solid var(--border-color);
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  white-space: nowrap;
+}
+
+.pill-top {
+  bottom: 18px;
+  gap: 8px;
+}
+
+.pill-bottom {
+  top: 18px;
+  font-size: 0.75rem;
+  padding: 2px 8px;
+  opacity: 1;
+  font-weight: 700;
+}
+
+.pill-top .cd {
+  font-weight: 800;
+  color: var(--node-color, var(--accent-color));
+  font-size: 0.85rem;
+}
+
+.pill-top .sep {
+  color: var(--border-color);
+  font-size: 0.7rem;
+  font-weight: 400;
+}
+
+.pill-top .at {
+  font-size: 0.75rem;
+  color: #000000;
+  font-weight: 800;
+}
+
+[data-theme="dark"] .pill-top .at {
+  color: #ffffff;
+}
+
+[data-theme="dark"] .pill-bottom {
+  filter: brightness(1.2);
+}
+
+@media (max-width: 480px) {
+  .stop-card {
+    padding: 1rem !important;
+  }
+}
